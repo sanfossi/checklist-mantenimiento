@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Checklist de Mantenimiento</title>
+<style>
+  :root {
+    --ink:     #0D1117;
+    --paper:   #F7F6F3;
+    --surface: #FFFFFF;
+    --border:  #DDD9D0;
+    --muted:   #7A7570;
+    --accent:  #1B5E8F;
+    --accent2: #0D3D60;
+    --ok:      #1A6B3C;
+    --ok-bg:   #EAF5EE;
+    --no:      #A0270D;
+    --no-bg:   #FBE9E5;
+    --warn:    #8B5E00;
+    --warn-bg: #FFF4DC;
+    --radius:  10px;
+    --font:    'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--accent);
+    color: #fff;
+    padding: 18px 20px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  }
+  .header h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: .01em; }
+  .header p  { font-size: .75rem; opacity: .75; margin-top: 2px; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 120px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* ── SELECT ── */
+  select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--surface);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237A7570' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  /* ── EQUIPO BLOCK ── */
+  .equipo-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .equipo-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 16px;
+    font-size: .95rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .equipo-header .badge {
+    background: rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 2px 9px;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+  }
+
+  /* ── ACTIVIDAD BLOCK ── */
+  .actividad-block { padding: 0 16px; }
+  .actividad-label {
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent);
+    padding: 12px 0 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+
+  /* ── TAREA ROW ── */
+  .tarea-row {
+    padding: 12px 0 10px;
+    border-bottom: 1px solid #F0EDE8;
+  }
+  .tarea-row:last-child { border-bottom: none; }
+  .tarea-nombre {
+    font-size: .9rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  /* ── RADIO GROUP ── */
+  .radio-group { display: flex; gap: 10px; }
+  .radio-opt { flex: 1; }
+  .radio-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .radio-opt label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    color: var(--muted);
+    background: var(--paper);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .radio-opt input:checked + label.opt-ok {
+    background: var(--ok-bg);
+    border-color: var(--ok);
+    color: var(--ok);
+  }
+  .radio-opt input:checked + label.opt-no {
+    background: var(--no-bg);
+    border-color: var(--no);
+    color: var(--no);
+  }
+  .radio-opt label:hover { border-color: var(--accent); }
+
+  /* ── JUSTIFICACION ── */
+  .justificacion-wrap {
+    margin-top: 8px;
+    display: none;
+  }
+  .justificacion-wrap.visible { display: block; }
+  .justificacion-wrap textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--no);
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: .88rem;
+    color: var(--ink);
+    background: var(--no-bg);
+    resize: none;
+    height: 60px;
+    line-height: 1.4;
+    transition: border-color .15s;
+  }
+  .justificacion-wrap textarea:focus { outline: none; border-color: var(--no); }
+  .justificacion-wrap textarea::placeholder { color: #C09088; }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .78rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-label span:last-child { font-weight: 700; color: var(--accent); }
+  .progress-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width .3s ease;
+  }
+
+  /* ── BTN ── */
+  .btn-finalizar {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    margin-top: 8px;
+  }
+  .btn-finalizar:hover  { background: var(--accent2); }
+  .btn-finalizar:active { transform: scale(.98); }
+  .btn-finalizar:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 1000;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 24px 20px;
+    max-width: 440px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    animation: slideUp .2s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .modal-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
+  .modal h2   { font-size: 1.05rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .modal p    { font-size: .85rem; color: var(--muted); text-align: center; margin-bottom: 16px; }
+  .modal-list { list-style: none; margin-bottom: 20px; }
+  .modal-list li {
+    background: var(--warn-bg);
+    border-left: 3px solid #E8A000;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-size: .82rem;
+    color: var(--warn);
+    line-height: 1.4;
+  }
+  .modal-close {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .modal-success .modal-icon { }
+  .modal-success h2 { color: var(--ok); }
+  .modal-success p  { font-size: .95rem; color: var(--ink); }
+
+  /* ── SUCCESS SCREEN ── */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .success-screen.open { display: flex; }
+  .success-icon { font-size: 4rem; margin-bottom: 16px; }
+  .success-screen h2 { font-size: 1.2rem; font-weight: 700; color: var(--ok); margin-bottom: 8px; }
+  .success-screen p  { font-size: .95rem; color: var(--muted); max-width: 300px; line-height: 1.5; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+  .empty-state .emoji { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+
+  /* ── STEP INDICATOR ── */
+  .step-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 400px) {
+    .radio-opt label { font-size: .8rem; padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>✓ Checklist de Mantenimiento</h1>
+  <p id="headerSub">Selecciona operador y frecuencia para comenzar</p>
+</div>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<div class="container" id="mainContainer">
+
+  <!-- PASO 1: DATOS INICIALES -->
+  <div class="card" id="cardDatos">
+    <div class="step-tag">Paso 1 de 2</div>
+    <div class="card-title">Identificación</div>
+
+    <div style="margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:6px">Operador</div>
+      <select id="selOperador">
+        <option value="">— Seleccionar operador —</option>
+        <option>Ángel Adarme</option>
+        <option>Ariel Lagos</option>
+        <option>Maximiliano Rosas</option>
+        <option>Víctor Contreras</option>
+        <option>Elvis Barazarte</option>
+        <option>Matías Acuña</option>
+        <option>Matías Sepúlveda</option>
+        <option>John Hincapié</option>
+        <option>Cristián Albornoz</option>
+        <option>Andrei León</option>
+        <option>Joaquín Soto</option>
+      </select>
+    </div>
+
+    <div>
+      <div class="card-title" style="margin-bottom:6px">Frecuencia de inspección</div>
+      <select id="selFrecuencia">
+        <option value="">— Seleccionar frecuencia —</option>
+        <option value="Diario">Diaria</option>
+        <option value="Semanal">Semanal</option>
+        <option value="Mensual">Mensual</option>
+        <option value="Trimestral">Trimestral</option>
+        <option value="Anual">Anual</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- PASO 2: CHECKLIST DINÁMICO -->
+  <div id="checklistArea" style="display:none">
+    <div class="step-tag">Paso 2 de 2 — Registro de actividades</div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span>Progreso</span>
+        <span id="progressText">0 / 0 tareas</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="equiposContainer"></div>
+
+    <button class="btn-finalizar" id="btnFinalizar" onclick="finalizar()">
+      Finalizar checklist
+    </button>
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <span class="emoji">📋</span>
+    Completa los campos de arriba para<br>cargar las actividades de inspección.
+  </div>
+</div>
+
+<!-- ════════════════ SUCCESS SCREEN ════════════════ -->
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">✅</div>
+  <h2>¡Registro completado!</h2>
+  <p>El mantenimiento ha sido registrado exitosamente. Muchas gracias.</p>
+</div>
+
+<!-- ════════════════ MODAL PENDIENTES ════════════════ -->
+<div class="modal-overlay" id="modalPendientes">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <h2>Hay tareas sin responder</h2>
+    <p>Debes completar todas las actividades antes de finalizar.</p>
+    <ul class="modal-list" id="listaPendientes"></ul>
+    <button class="modal-close" onclick="cerrarModal()">Volver y completar</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DATA — estructura completa del Excel
+// ═══════════════════════════════════════════════════
+const EQUIPOS_ORDER = ['ElDg','Ni','Cu','US','Coat','LS','Dev','Et','Rr','Cr'];
+
+const DATA = [
+  // actividad, equipos[], tipos[], frecuencias[]
+  {a:'Lavado de manchas en compuertas',       eq:['ElDg','Ni','Cu','US','Coat','Dev','Et','Rr','Cr'], ti:['Limpieza','Inspección'],        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Pulido y/o limpieza de pinolas',         eq:['ElDg','Ni','Cu','US','Coat','LS','Dev','Et','Rr','Cr'], ti:['Limpieza'],                fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Limpieza de ejes de pinolas',            eq:['ElDg','Ni','Cu','US','Coat','Dev','Et','Rr','Cr'], ti:['Limpieza'],                    fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Lavado interno del baño',                eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:['Limpieza'],                          fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Limpieza de manga resistente al agua',   eq:['ElDg'], ti:['Limpieza'],                                                              fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Inspección y limpieza de rociadores',    eq:['ElDg'], ti:['Limpieza'],                                                              fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión y ajuste de manga resistente al agua', eq:['ElDg'], ti:['Inspección','Ajuste'],                                            fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión de sello resistente al agua',   eq:['ElDg'], ti:['Inspección'],                                                            fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión de válvulas de drenaje',        eq:['ElDg'], ti:['Limpieza','Inspección'],                                                 fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de ácido sulfúrico al 5%',    eq:['ElDg','Rr'], ti:['Ajuste'],                                                          fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de solución Ballard',         eq:['ElDg'], ti:['Inspección','Ajuste'],                                                   fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de solución desengrasante',   eq:['ElDg'], ti:['Inspección','Ajuste'],                                                   fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de Ácido Clorhídrico al 5%', eq:['Et'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión y reposición de Agua oxigenada al 50%', eq:['Et'], ti:[],                                                                  fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de STS al 3%',               eq:['Rr'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de Óxido de Cobre',           eq:['Cu'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de Kolt UX -1',               eq:['Cu'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de Kolt UX - 2 (MU)',         eq:['Cu'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión y recambio de Techno wiper',    eq:['Coat'], ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión de aplicación de IPA en techno wiper', eq:['Coat'], ti:[],                                                                 fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de líquido foto resistente',  eq:['Coat'], ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de alcohol isopropílico (IPA)', eq:['Coat'], ti:[],                                                                      fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión chaveta de pinola',             eq:['LS'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Reposición de solución de revelado',     eq:['Dev'],  ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión y reposición de Chrio RX-R',   eq:['Cr'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
+  {a:'Control de concentraciones en la solución', eq:['Ni','Cu','Dev','Et','Cr'], ti:[],                                                  fr:['Semanal','Mensual','Trimestral','Anual']},
+  {a:'Control de pH en la solución',           eq:['Ni','Dev'], ti:[],                                                                    fr:['Semanal','Mensual','Trimestral','Anual']},
+  {a:'Limpieza de lente del laser',            eq:['LS'],   ti:[],                                                                        fr:['Semanal','Mensual','Trimestral','Anual']},
+  {a:'Revisión de metal de energización',      eq:['ElDg'], ti:['Inspección'],                                                            fr:['Semanal','Mensual','Trimestral','Anual']},
+  {a:'Recambio de filtros del baño',           eq:['ElDg','Ni','US','Coat','Dev','Et'], ti:['Ajuste'],                                    fr:['Mensual','Trimestral','Anual']},
+  {a:'Recambio de filtro de spray Ballard',    eq:['ElDg','Coat'], ti:['Ajuste'],                                                         fr:['Mensual','Trimestral','Anual']},
+  {a:'Recambio de solución del baño',          eq:['ElDg','US','Rr'], ti:['Ajuste'],                                                      fr:['Mensual','Trimestral','Anual']},
+  {a:'Limpieza o reemplazo de cátodo/ánodo',  eq:['ElDg','Ni'], ti:['Inspección','Ajuste'],                                              fr:['Mensual','Trimestral','Anual']},
+  {a:'Revisión y engrase de contrapunto de pinola', eq:['LS'], ti:[],                                                                     fr:['Mensual','Trimestral','Anual']},
+  {a:'Revisión y limpieza de unidad de aspirado', eq:['LS'], ti:[],                                                                       fr:['Mensual','Trimestral','Anual']},
+  {a:'Revisión de unidad de enfriamiento',     eq:['LS'],   ti:[],                                                                        fr:['Mensual','Trimestral','Anual']},
+  {a:'Revisión de sistema de aire comprimido', eq:['LS'],   ti:[],                                                                        fr:['Mensual','Trimestral','Anual']},
+  {a:'Limpieza de boquillas y tuberías internas', eq:['Dev'], ti:[],                                                                      fr:['Mensual','Trimestral','Anual']},
+  {a:'Recambio de sello de labio',             eq:['ElDg','Rr'], ti:['Inspección','Ajuste'],                                             fr:['Mensual','Trimestral','Anual']},
+  {a:'Recambio de sellos de teflón',           eq:['ElDg','Ni','Cu','Et','Rr','Cr'], ti:[],                                              fr:['Trimestral','Anual']},
+  {a:'Limpieza y mantenimiento de manga resistente al agua', eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],                      fr:['Trimestral','Anual']},
+  {a:'Pulido profundo de pinolas y eje',       eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],                                   fr:['Trimestral','Anual']},
+  {a:'Recambio de oring en manga resistente al agua si está dañado', eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],             fr:['Trimestral','Anual']},
+  {a:'Recambio de sello exterior en manga resistente al agua', eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],                   fr:['Trimestral','Anual']},
+  {a:'Relleno de depósito de aceite',          eq:['ElDg','Cu','Rr','Cr'], ti:[],                                                        fr:['Trimestral','Anual']},
+  {a:'Revisión y limpieza de o-ring en pistón impermeable', eq:['ElDg'], ti:['Limpieza','Ajuste'],                                       fr:['Anual']},
+  {a:'Lubricación de partes móviles',          eq:['ElDg'], ti:['Limpieza','Inspección','Lubricación'],                                  fr:['Anual']},
+  {a:'Movimiento vertical del tanque',         eq:['ElDg'], ti:['Limpieza','Lubricación'],                                               fr:['Anual']},
+  {a:'Revisión de carcasa de filtro',          eq:['ElDg'], ti:['Inspección'],                                                           fr:['Anual']},
+];
+
+// ═══════════════════════════════════════════════════
+//  ESTADO
+// ═══════════════════════════════════════════════════
+let taskCounter = 0;   // unique id per task row
+let totalTasks  = 0;
+
+function getTasks(frecuencia) {
+  // Build: { equipo -> { actividad -> [tipos] } }
+  const map = {};
+  EQUIPOS_ORDER.forEach(eq => { map[eq] = {}; });
+
+  DATA.forEach(row => {
+    if (!row.fr.includes(frecuencia)) return;
+    row.eq.forEach(eq => {
+      if (!map[eq]) return;
+      if (!map[eq][row.a]) map[eq][row.a] = [];
+      const tipos = row.ti.length ? row.ti : [''];
+      tipos.forEach(t => {
+        const label = t ? `[${t}] ${row.a}` : row.a;
+        if (!map[eq][row.a].includes(label)) map[eq][row.a].push(label);
+      });
+    });
+  });
+  return map;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════
+function buildChecklist(frecuencia) {
+  const tasks = getTasks(frecuencia);
+  const container = document.getElementById('equiposContainer');
+  container.innerHTML = '';
+  taskCounter = 0;
+  totalTasks  = 0;
+
+  EQUIPOS_ORDER.forEach(eq => {
+    const actividades = tasks[eq];
+    const actKeys = Object.keys(actividades).filter(a => actividades[a].length > 0);
+    if (actKeys.length === 0) return;
+
+    const equipBlock = document.createElement('div');
+    equipBlock.className = 'equipo-block';
+
+    // Header del equipo
+    const taskCount = actKeys.reduce((s,a) => s + actividades[a].length, 0);
+    equipBlock.innerHTML = `
+      <div class="equipo-header">
+        ${eq}
+        <span class="badge">${taskCount} tarea${taskCount !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="actividad-block" id="equipo-${eq}"></div>
+    `;
+    container.appendChild(equipBlock);
+
+    const actContainer = equipBlock.querySelector(`#equipo-${eq}`);
+
+    actKeys.forEach(actNombre => {
+      const tareas = actividades[actNombre];
+
+      // Label de actividad
+      const actLabel = document.createElement('div');
+      actLabel.className = 'actividad-label';
+      actLabel.textContent = actNombre;
+      actContainer.appendChild(actLabel);
+
+      tareas.forEach(tareaLabel => {
+        const id = `task_${taskCounter++}`;
+        totalTasks++;
+
+        const row = document.createElement('div');
+        row.className = 'tarea-row';
+        row.dataset.taskId = id;
+
+        // Nombre a mostrar (quitar el prefijo [Tipo] si existe, mostrarlo como subtítulo)
+        const match = tareaLabel.match(/^\[([^\]]+)\] (.+)$/);
+        let displayName;
+        if (match) {
+          displayName = `<span style="font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-right:6px">${match[1]}</span>${match[2]}`;
+        } else {
+          displayName = tareaLabel;
+        }
+
+        row.innerHTML = `
+          <div class="tarea-nombre">${displayName}</div>
+          <div class="radio-group">
+            <div class="radio-opt">
+              <input type="radio" name="${id}" id="${id}_ok" value="cumplido"
+                     onchange="onRadioChange('${id}')">
+              <label for="${id}_ok" class="opt-ok">✓ Cumplido</label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="${id}" id="${id}_no" value="no_cumplido"
+                     onchange="onRadioChange('${id}')">
+              <label for="${id}_no" class="opt-no">✗ No cumplido</label>
+            </div>
+          </div>
+          <div class="justificacion-wrap" id="just_${id}">
+            <textarea id="txt_${id}" maxlength="200"
+                      placeholder="Describe brevemente el motivo (máx. 2 líneas)…"
+                      rows="2"></textarea>
+          </div>
+        `;
+        actContainer.appendChild(row);
+      });
+    });
+  });
+
+  updateProgress();
+}
+
+function onRadioChange(id) {
+  const radio = document.querySelector(`input[name="${id}"]:checked`);
+  const just  = document.getElementById(`just_${id}`);
+  const txt   = document.getElementById(`txt_${id}`);
+  if (radio && radio.value === 'no_cumplido') {
+    just.classList.add('visible');
+    txt.focus();
+  } else {
+    just.classList.remove('visible');
+    if (txt) txt.value = '';
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  let answered = 0;
+  for (let i = 0; i < taskCounter; i++) {
+    const id = `task_${i}`;
+    const checked = document.querySelector(`input[name="${id}"]:checked`);
+    if (checked) answered++;
+  }
+  const pct = totalTasks > 0 ? Math.round(answered / totalTasks * 100) : 0;
+  document.getElementById('progressText').textContent = `${answered} / ${totalTasks} tareas`;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ═══════════════════════════════════════════════════
+//  SELECTS
+// ═══════════════════════════════════════════════════
+function onSelectionChange() {
+  const op   = document.getElementById('selOperador').value;
+  const freq = document.getElementById('selFrecuencia').value;
+  const area = document.getElementById('checklistArea');
+  const empty = document.getElementById('emptyState');
+
+  if (op && freq) {
+    area.style.display = 'block';
+    empty.style.display = 'none';
+    document.getElementById('headerSub').textContent =
+      `${op} · Inspección ${freq.toLowerCase()}`;
+    buildChecklist(freq);
+  } else {
+    area.style.display = 'none';
+    empty.style.display = 'block';
+    document.getElementById('headerSub').textContent =
+      'Selecciona operador y frecuencia para comenzar';
+  }
+}
+
+document.getElementById('selOperador').addEventListener('change', onSelectionChange);
+document.getElementById('selFrecuencia').addEventListener('change', onSelectionChange);
+
+// ═══════════════════════════════════════════════════
+//  FINALIZAR
+// ═══════════════════════════════════════════════════
+function finalizar() {
+  const pendientes = [];
+  const op   = document.getElementById('selOperador').value;
+  const freq = document.getElementById('selFrecuencia').value;
+
+  // Recopilar respuestas y detectar pendientes
+  const respuestas = [];
+  for (let i = 0; i < taskCounter; i++) {
+    const id      = `task_${i}`;
+    const checked = document.querySelector(`input[name="${id}"]:checked`);
+    const row     = document.querySelector(`.tarea-row[data-task-id="${id}"]`);
+    const nombre  = row ? row.querySelector('.tarea-nombre').textContent.trim() : id;
+
+    if (!checked) {
+      pendientes.push(nombre);
+    } else {
+      const val  = checked.value;
+      const txt  = document.getElementById(`txt_${id}`);
+      const just = val === 'no_cumplido' ? (txt ? txt.value.trim() : '') : '';
+      // Pendiente si es "no cumplido" pero sin justificación
+      if (val === 'no_cumplido' && !just) {
+        pendientes.push(`${nombre} (falta justificación)`);
+      } else {
+        respuestas.push({ id, nombre, estado: val, justificacion: just });
+      }
+    }
+  }
+
+  if (pendientes.length > 0) {
+    // Mostrar modal con pendientes
+    const lista = document.getElementById('listaPendientes');
+    lista.innerHTML = pendientes.map(p => `<li>${p}</li>`).join('');
+    document.getElementById('modalPendientes').classList.add('open');
+  } else {
+    // Enviar a Google Sheets (App Script) si hay URL configurada, sino mostrar éxito
+    enviarDatos({ operador: op, frecuencia: freq, fecha: new Date().toISOString(), respuestas });
+  }
+}
+
+function cerrarModal() {
+  document.getElementById('modalPendientes').classList.remove('open');
+}
+
+// Cerrar modal al tocar el overlay
+document.getElementById('modalPendientes').addEventListener('click', function(e) {
+  if (e.target === this) cerrarModal();
+});
+
+// ═══════════════════════════════════════════════════
+//  ENVÍO
+// ═══════════════════════════════════════════════════
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyT3GYh07lo7EnBBObjUtRu-wHkSVtrs2Yjfmo8E-Xz9LvUhsbBllIYxc2Ym1KqcdXA/exec'; // ← Pega aquí la URL de tu Google Apps Script
+
+function enviarDatos(datos) {
+  if (WEBHOOK_URL) {
+    // Enviar a Google Apps Script → Google Sheets
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    })
+    .then(() => mostrarExito())
+    .catch(() => mostrarExito()); // no-cors siempre resuelve como opaque
+  } else {
+    // Sin webhook configurado: mostrar éxito de todas formas
+    console.log('Datos del checklist:', JSON.stringify(datos, null, 2));
+    mostrarExito();
+  }
+}
+
+function mostrarExito() {
+  document.getElementById('mainContainer').style.display = 'none';
+  document.getElementById('successScreen').classList.add('open');
+  document.querySelector('.header h1').textContent = '✓ Registro completado';
+  document.getElementById('headerSub').textContent = 'Mantenimiento registrado exitosamente';
+}
+</script>
+</body>
+</html>
