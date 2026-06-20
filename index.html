@@ -3,381 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Checklist de Mantenimiento</title>
+<title>Mantenimiento Autónomo Planta Robotizada de Cilindros</title>
 <style>
-  :root {
-    --ink:     #0D1117;
-    --paper:   #F7F6F3;
-    --surface: #FFFFFF;
-    --border:  #DDD9D0;
-    --muted:   #7A7570;
-    --accent:  #1B5E8F;
-    --accent2: #0D3D60;
-    --ok:      #1A6B3C;
-    --ok-bg:   #EAF5EE;
-    --no:      #A0270D;
-    --no-bg:   #FBE9E5;
-    --warn:    #8B5E00;
-    --warn-bg: #FFF4DC;
-    --radius:  10px;
-    --font:    'Segoe UI', system-ui, -apple-system, sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font);
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-  }
+:root {
+  --ink:    #0D1117;
+  --paper:  #F0F2F5;
+  --surf:   #FFFFFF;
+  --bdr:    #E0DDD8;
+  --muted:  #7A7570;
+  --acc:    #1B5E8F;
+  --acc2:   #0D3D60;
+  --ok:     #1A6B3C;
+  --ok-bg:  #D6EFDF;
+  --no:     #A0270D;
+  --no-bg:  #F9DDD8;
+  --warn:   #8B5E00;
+  --wb:     #FFF4DC;
+  --r:      6px;
+  --f:      'Segoe UI', system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--paper);color:var(--ink);font-size:13px}
 
-  /* ── HEADER ── */
-  .header {
-    background: var(--accent);
-    color: #fff;
-    padding: 18px 20px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,.18);
-  }
-  .header h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: .01em; }
-  .header p  { font-size: .75rem; opacity: .75; margin-top: 2px; }
+/* HEADER */
+.hdr{background:var(--acc);color:#fff;padding:10px 14px 8px;position:sticky;top:0;z-index:100;
+     box-shadow:0 2px 6px rgba(0,0,0,.2);display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:.9rem;font-weight:700;white-space:nowrap}
+.hdr-sub{font-size:.7rem;opacity:.75;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-prog{font-size:.7rem;font-weight:700;white-space:nowrap;background:rgba(255,255,255,.15);
+          border-radius:4px;padding:3px 8px}
 
-  /* ── CONTAINER ── */
-  .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 120px; }
+/* WRAP */
+.wrap{max-width:960px;margin:0 auto;padding:10px 10px 80px}
 
-  /* ── CARD ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 16px;
-    margin-bottom: 14px;
-  }
-  .card-title {
-    font-size: .7rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
+/* DATOS ROW */
+.datos-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+           background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+           padding:10px 12px;margin-bottom:8px}
+.fld label{display:block;font-size:.6rem;font-weight:700;text-transform:uppercase;
+           letter-spacing:.08em;color:var(--muted);margin-bottom:3px}
+select{width:100%;padding:7px 10px;border:1.5px solid var(--bdr);border-radius:5px;
+       font-family:var(--f);font-size:.82rem;color:var(--ink);background:var(--surf);
+       appearance:none;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A7570' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+       background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
+select:focus{outline:none;border-color:var(--acc)}
 
-  /* ── SELECT ── */
-  select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-family: var(--font);
-    font-size: 1rem;
-    color: var(--ink);
-    background: var(--surface);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237A7570' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    cursor: pointer;
-    transition: border-color .15s;
-  }
-  select:focus { outline: none; border-color: var(--accent); }
+/* PROGRESS STRIP */
+.prog-strip{display:flex;align-items:center;gap:8px;background:var(--surf);
+            border:1px solid var(--bdr);border-radius:var(--r);
+            padding:6px 12px;margin-bottom:8px}
+.prog-strip span{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.prog-strip strong{color:var(--acc)}
+.prog-track{flex:1;height:5px;background:var(--bdr);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--acc);border-radius:3px;transition:width .25s}
+.prog-pct{font-size:.7rem;font-weight:700;color:var(--acc);min-width:30px;text-align:right}
 
-  /* ── EQUIPO BLOCK ── */
-  .equipo-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 16px;
-    overflow: hidden;
-  }
-  .equipo-header {
-    background: var(--accent);
-    color: #fff;
-    padding: 12px 16px;
-    font-size: .95rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .equipo-header .badge {
-    background: rgba(255,255,255,.2);
-    border-radius: 20px;
-    padding: 2px 9px;
-    font-size: .7rem;
-    font-weight: 600;
-    letter-spacing: .05em;
-  }
+/* EQUIPO BLOCK */
+.eq-block{border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:6px;overflow:hidden}
 
-  /* ── ACTIVIDAD BLOCK ── */
-  .actividad-block { padding: 0 16px; }
-  .actividad-label {
-    font-size: .65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--accent);
-    padding: 12px 0 4px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 0;
-  }
+/* EQUIPO HEADER */
+.eq-hdr{background:var(--acc);color:#fff;padding:7px 12px;
+        display:flex;align-items:center;gap:7px;cursor:pointer;
+        user-select:none;-webkit-tap-highlight-color:transparent}
+.eq-hdr:hover{background:var(--acc2)}
+.eq-name{font-size:.8rem;font-weight:700;letter-spacing:.04em}
+.eq-badge{background:rgba(255,255,255,.18);border-radius:12px;
+          padding:1px 7px;font-size:.6rem;font-weight:600}
+.eq-done{background:rgba(26,107,60,.55);display:none}
+.eq-chev{margin-left:auto;font-size:.7rem;transition:transform .2s;font-style:normal}
+.eq-block.closed .eq-chev{transform:rotate(-90deg)}
+.eq-block.closed .eq-body{display:none}
 
-  /* ── TAREA ROW ── */
-  .tarea-row {
-    padding: 12px 0 10px;
-    border-bottom: 1px solid #F0EDE8;
-  }
-  .tarea-row:last-child { border-bottom: none; }
-  .tarea-nombre {
-    font-size: .9rem;
-    color: var(--ink);
-    margin-bottom: 10px;
-    line-height: 1.4;
-  }
+/* ── JERARQUÍA: Equipo > Actividad > Tipo ── */
+.eq-body{background:var(--surf)}
 
-  /* ── RADIO GROUP ── */
-  .radio-group { display: flex; gap: 10px; }
-  .radio-opt { flex: 1; }
-  .radio-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-  .radio-opt label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 9px 10px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: .85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .15s;
-    color: var(--muted);
-    background: var(--paper);
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .radio-opt input:checked + label.opt-ok {
-    background: var(--ok-bg);
-    border-color: var(--ok);
-    color: var(--ok);
-  }
-  .radio-opt input:checked + label.opt-no {
-    background: var(--no-bg);
-    border-color: var(--no);
-    color: var(--no);
-  }
-  .radio-opt label:hover { border-color: var(--accent); }
+/* ACTIVIDAD — título de sección dentro del equipo */
+.act-hdr{
+  font-size:.75rem;font-weight:700;color:var(--ink);
+  padding:9px 12px 5px;
+  background:#EEF2F7;
+  border-top:2px solid var(--acc);
+  border-bottom:1px solid #D4D8E2;
+  letter-spacing:.01em;
+  display:flex;align-items:center;gap:6px
+}
+.act-hdr::before{
+  content:'';display:inline-block;
+  width:3px;height:14px;border-radius:2px;
+  background:var(--acc);flex-shrink:0
+}
 
-  /* ── JUSTIFICACION ── */
-  .justificacion-wrap {
-    margin-top: 8px;
-    display: none;
-  }
-  .justificacion-wrap.visible { display: block; }
-  .justificacion-wrap textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid var(--no);
-    border-radius: 8px;
-    font-family: var(--font);
-    font-size: .88rem;
-    color: var(--ink);
-    background: var(--no-bg);
-    resize: none;
-    height: 60px;
-    line-height: 1.4;
-    transition: border-color .15s;
-  }
-  .justificacion-wrap textarea:focus { outline: none; border-color: var(--no); }
-  .justificacion-wrap textarea::placeholder { color: #C09088; }
+/* Nombre */
+  display:inline-block;
+  font-size:.58rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;
+  border-radius:3px;padding:1px 6px;
+  vertical-align:middle;margin-left:6px;
+  white-space:nowrap;flex-shrink:0
+}
+/* Color por categoría */
 
-  /* ── PROGRESS ── */
-  .progress-bar-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 14px;
-  }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: .78rem;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  .progress-label span:last-child { font-weight: 700; color: var(--accent); }
-  .progress-track {
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 3px;
-    transition: width .3s ease;
-  }
 
-  /* ── BTN ── */
-  .btn-finalizar {
-    width: 100%;
-    padding: 16px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-family: var(--font);
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: .02em;
-    cursor: pointer;
-    transition: background .15s, transform .1s;
-    margin-top: 8px;
-  }
-  .btn-finalizar:hover  { background: var(--accent2); }
-  .btn-finalizar:active { transform: scale(.98); }
-  .btn-finalizar:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+/* FILA */
+.t-row{border-bottom:1px solid #EDEAE5;transition:background .1s}
+.t-row:nth-child(odd){background:#F0F5FB}
+.t-row.act-first{border-top:1px solid var(--bdr)}
+.t-row:last-child{border-bottom:none}
+.t-row.ok-row{background:var(--ok-bg)}
+.t-row.no-row{background:var(--no-bg)}
+.t-row:hover{background:#F2F0EC}
+.t-row.ok-row:hover{background:#C8E8D4}
+.t-row.no-row:hover{background:#F2D0C8}
 
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.55);
-    z-index: 1000;
-    padding: 20px;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: 14px;
-    padding: 24px 20px;
-    max-width: 440px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    animation: slideUp .2s ease;
-  }
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
-  }
-  .modal-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
-  .modal h2   { font-size: 1.05rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
-  .modal p    { font-size: .85rem; color: var(--muted); text-align: center; margin-bottom: 16px; }
-  .modal-list { list-style: none; margin-bottom: 20px; }
-  .modal-list li {
-    background: var(--warn-bg);
-    border-left: 3px solid #E8A000;
-    border-radius: 6px;
-    padding: 8px 12px;
-    margin-bottom: 6px;
-    font-size: .82rem;
-    color: var(--warn);
-    line-height: 1.4;
-  }
-  .modal-close {
-    width: 100%;
-    padding: 13px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-family: var(--font);
-    font-size: .95rem;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .modal-success .modal-icon { }
-  .modal-success h2 { color: var(--ok); }
-  .modal-success p  { font-size: .95rem; color: var(--ink); }
+/* Línea principal: número · nombre · botones */
+.t-main{display:flex;align-items:center;padding:0 10px 0 12px;min-height:34px;gap:8px}
 
-  /* ── SUCCESS SCREEN ── */
-  .success-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    text-align: center;
-    padding: 30px 20px;
-  }
-  .success-screen.open { display: flex; }
-  .success-icon { font-size: 4rem; margin-bottom: 16px; }
-  .success-screen h2 { font-size: 1.2rem; font-weight: 700; color: var(--ok); margin-bottom: 8px; }
-  .success-screen p  { font-size: .95rem; color: var(--muted); max-width: 300px; line-height: 1.5; }
+/* Número */
+.t-num{font-size:.68rem;font-weight:700;color:var(--muted);
+       min-width:22px;text-align:right;flex-shrink:0;
+       font-variant-numeric:tabular-nums}
 
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-    font-size: .9rem;
-  }
-  .empty-state .emoji { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+/* Nombre — ocupa todo el espacio disponible */
+.t-name{flex:1;min-width:0;font-size:.77rem;line-height:1.3;
+        padding:5px 0;color:var(--ink)}
 
-  /* ── STEP INDICATOR ── */
-  .step-tag {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 6px;
-  }
+/* Botones — siempre a la derecha */
+.t-btns{display:flex;gap:5px;flex-shrink:0}
+.t-btn{width:32px;height:26px;border:1.5px solid var(--bdr);border-radius:5px;
+       background:var(--paper);cursor:pointer;font-size:.8rem;font-weight:700;
+       display:flex;align-items:center;justify-content:center;
+       transition:all .12s;color:var(--muted);line-height:1;
+       -webkit-tap-highlight-color:transparent}
+.t-btn:hover{border-color:var(--acc);color:var(--acc)}
+.t-btn.sel-ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.t-btn.sel-no{background:var(--no-bg);border-color:var(--no);color:var(--no)}
+/* Radio oculto */
+.t-radio{position:absolute;opacity:0;width:0;height:0}
 
-  @media (max-width: 400px) {
-    .radio-opt label { font-size: .8rem; padding: 8px 6px; }
-  }
+/* JUST inline */
+.t-just{display:none;padding:0 12px 6px}
+.t-just.vis{display:block}
+.t-just textarea{width:100%;padding:5px 8px;border:1.5px solid var(--no);
+                 border-radius:5px;font-family:var(--f);font-size:.76rem;
+                 color:var(--ink);background:var(--no-bg);resize:none;height:44px;
+                 line-height:1.4}
+.t-just textarea:focus{outline:none}
+.t-just textarea::placeholder{color:#C09088;font-size:.72rem}
+
+/* BTN FINALIZAR */
+.btn-fin{width:100%;padding:12px;background:#166534;color:#fff;border:none;
+         border-radius:var(--r);font-family:var(--f);font-size:.9rem;font-weight:700;
+         cursor:pointer;transition:background .15s,transform .1s;margin-top:8px}
+.btn-fin:hover{background:#14532D}
+.btn-fin:active{transform:scale(.98)}
+
+/* EMPTY */
+.empty{text-align:center;padding:32px 20px;color:var(--muted);font-size:.85rem}
+.empty i{font-size:2rem;display:block;margin-bottom:8px;font-style:normal}
+
+/* SUCCESS */
+.success{display:none;flex-direction:column;align-items:center;
+         justify-content:center;min-height:60vh;text-align:center;padding:30px}
+.success.open{display:flex}
+.success i{font-size:3.5rem;margin-bottom:14px;font-style:normal}
+.success h2{font-size:1.1rem;font-weight:700;color:var(--acc);margin-bottom:6px}
+.success p{font-size:.85rem;color:var(--muted);max-width:280px;line-height:1.5}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+         z-index:1000;padding:20px;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--surf);border-radius:12px;padding:20px 16px;
+       max-width:400px;width:100%;max-height:80vh;overflow-y:auto;
+       box-shadow:0 12px 40px rgba(0,0,0,.25);animation:up .2s ease}
+@keyframes up{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal i{font-size:1.8rem;text-align:center;display:block;margin-bottom:8px;font-style:normal}
+.modal h2{font-size:.95rem;font-weight:700;text-align:center;margin-bottom:5px}
+.modal p{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:12px}
+.modal ul{list-style:none;margin-bottom:16px}
+.modal ul li{background:var(--wb);border-left:3px solid #E8A000;border-radius:5px;
+             padding:6px 10px;margin-bottom:4px;font-size:.76rem;color:var(--warn);
+             display:flex;align-items:baseline;gap:8px}
+.pend-num{font-size:.68rem;font-weight:700;color:#fff;background:#E8A000;
+          border-radius:3px;padding:1px 6px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.modal-close{width:100%;padding:11px;background:var(--acc);color:#fff;border:none;
+             border-radius:7px;font-family:var(--f);font-size:.88rem;font-weight:700;cursor:pointer}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+  .datos-row{grid-template-columns:1fr}
+  .t-btn{width:36px;height:28px}
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>✓ Checklist de Mantenimiento</h1>
-  <p id="headerSub">Selecciona operador y frecuencia para comenzar</p>
+<!-- HEADER -->
+<div class="hdr">
+  <span class="hdr-title">Mantenimiento Autónomo Planta Robotizada de Cilindros</span>
+  <span class="hdr-sub" id="hdrSub">Selecciona operador y frecuencia</span>
+  <span class="hdr-prog" id="hdrProg" style="display:none" id="hdrProg">0%</span>
 </div>
 
-<!-- ════════════════ MAIN ════════════════ -->
-<div class="container" id="mainContainer">
+<!-- MAIN -->
+<div class="wrap" id="mainWrap">
 
-  <!-- PASO 1: DATOS INICIALES -->
-  <div class="card" id="cardDatos">
-    <div class="step-tag">Paso 1 de 2</div>
-    <div class="card-title">Identificación</div>
-
-    <div style="margin-bottom:14px">
-      <div class="card-title" style="margin-bottom:6px">Operador</div>
-      <select id="selOperador">
-        <option value="">— Seleccionar operador —</option>
-        <option>Ángel Adarme</option>
-        <option>Ariel Lagos</option>
-        <option>Maximiliano Rosas</option>
-        <option>Víctor Contreras</option>
-        <option>Elvis Barazarte</option>
-        <option>Matías Acuña</option>
-        <option>Matías Sepúlveda</option>
-        <option>John Hincapié</option>
-        <option>Cristián Albornoz</option>
-        <option>Andrei León</option>
+  <!-- IDENTIFICACIÓN -->
+  <div class="datos-row">
+    <div class="fld">
+      <label>Operador</label>
+      <select id="selOp">
+        <option value="">— Seleccionar —</option>
+        <option>Ángel Adarme</option><option>Ariel Lagos</option>
+        <option>Maximiliano Rosas</option><option>Víctor Contreras</option>
+        <option>Elvis Barazarte</option><option>Matías Acuña</option>
+        <option>Matías Sepúlveda</option><option>John Hincapié</option>
+        <option>Cristián Albornoz</option><option>Andrei León</option>
         <option>Joaquín Soto</option>
       </select>
     </div>
-
-    <div>
-      <div class="card-title" style="margin-bottom:6px">Frecuencia de inspección</div>
-      <select id="selFrecuencia">
-        <option value="">— Seleccionar frecuencia —</option>
+    <div class="fld">
+      <label>Frecuencia</label>
+      <select id="selFreq">
+        <option value="">— Seleccionar —</option>
         <option value="Diario">Diaria</option>
         <option value="Semanal">Semanal</option>
         <option value="Mensual">Mensual</option>
@@ -387,352 +236,399 @@
     </div>
   </div>
 
-  <!-- PASO 2: CHECKLIST DINÁMICO -->
-  <div id="checklistArea" style="display:none">
-    <div class="step-tag">Paso 2 de 2 — Registro de actividades</div>
+  <!-- CHECKLIST -->
+  <div id="clArea" style="display:none">
 
-    <div class="progress-bar-wrap">
-      <div class="progress-label">
-        <span>Progreso</span>
-        <span id="progressText">0 / 0 tareas</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill" style="width:0%"></div>
-      </div>
+    <!-- PROGRESS -->
+    <div class="prog-strip">
+      <span>Progreso: <strong id="progTxt">0 / 0</strong></span>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <span class="prog-pct" id="progPct">0%</span>
     </div>
 
-    <div id="equiposContainer"></div>
+    <div id="eqContainer"></div>
 
-    <button class="btn-finalizar" id="btnFinalizar" onclick="finalizar()">
-      Finalizar checklist
-    </button>
+    <button class="btn-fin" onclick="finalizar()">Finalizar y enviar ✓</button>
   </div>
 
-  <div class="empty-state" id="emptyState">
-    <span class="emoji">📋</span>
-    Completa los campos de arriba para<br>cargar las actividades de inspección.
+  <div class="empty" id="emptyState">
+    <i>📋</i>Completa los campos para cargar las actividades.
   </div>
 </div>
 
-<!-- ════════════════ SUCCESS SCREEN ════════════════ -->
-<div class="success-screen" id="successScreen">
-  <div class="success-icon">✅</div>
+<!-- SUCCESS -->
+<div class="success" id="successScr">
+  <i>✅</i>
   <h2>¡Registro completado!</h2>
-  <p>El mantenimiento ha sido registrado exitosamente. Muchas gracias.</p>
+  <p>El mantenimiento ha sido registrado exitosamente.</p>
+  <p style="margin-top:10px;font-size:.78rem;color:var(--acc)">
+    📧 Se abrió tu cliente de correo con el resumen.<br>
+    Recuerda presionar <strong>Enviar</strong> para que llegue a <em>sanfossi@bo.cl</em>.
+  </p>
 </div>
 
-<!-- ════════════════ MODAL PENDIENTES ════════════════ -->
-<div class="modal-overlay" id="modalPendientes">
+<!-- MODAL PENDIENTES -->
+<div class="overlay" id="modalPend">
   <div class="modal">
-    <div class="modal-icon">⚠️</div>
-    <h2>Hay tareas sin responder</h2>
-    <p>Debes completar todas las actividades antes de finalizar.</p>
-    <ul class="modal-list" id="listaPendientes"></ul>
-    <button class="modal-close" onclick="cerrarModal()">Volver y completar</button>
+    <i>⚠️</i>
+    <h2>Preguntas sin responder</h2>
+    <p>Faltan <strong id="cntPend" style="color:var(--no)">0</strong> preguntas por completar antes de finalizar.</p>
+    <ul id="listPend"></ul>
+    <button class="modal-close" onclick="closeModal()">Volver y completar</button>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  DATA — estructura completa del Excel
-// ═══════════════════════════════════════════════════
-const EQUIPOS_ORDER = ['ElDg','Ni','Cu','US','Coat','LS','Dev','Et','Rr','Cr'];
+// ═══════════════ DATA ═══════════════
+const EQ_ORDER = ['ElDg','Ni','Cu','US','Coat','LS','Dev','Et','Rr','Cr'];
 
 const DATA = [
-  // actividad, equipos[], tipos[], frecuencias[]
-  {a:'Lavado de manchas en compuertas',       eq:['ElDg','Ni','Cu','US','Coat','Dev','Et','Rr','Cr'], ti:['Limpieza','Inspección'],        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Pulido y/o limpieza de pinolas',         eq:['ElDg','Ni','Cu','US','Coat','LS','Dev','Et','Rr','Cr'], ti:['Limpieza'],                fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Limpieza de ejes de pinolas',            eq:['ElDg','Ni','Cu','US','Coat','Dev','Et','Rr','Cr'], ti:['Limpieza'],                    fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Lavado interno del baño',                eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:['Limpieza'],                          fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Limpieza de manga resistente al agua',   eq:['ElDg'], ti:['Limpieza'],                                                              fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Inspección y limpieza de rociadores',    eq:['ElDg'], ti:['Limpieza'],                                                              fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión y ajuste de manga resistente al agua', eq:['ElDg'], ti:['Inspección','Ajuste'],                                            fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión de sello resistente al agua',   eq:['ElDg'], ti:['Inspección'],                                                            fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión de válvulas de drenaje',        eq:['ElDg'], ti:['Limpieza','Inspección'],                                                 fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de ácido sulfúrico al 5%',    eq:['ElDg','Rr'], ti:['Ajuste'],                                                          fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de solución Ballard',         eq:['ElDg'], ti:['Inspección','Ajuste'],                                                   fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de solución desengrasante',   eq:['ElDg'], ti:['Inspección','Ajuste'],                                                   fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de Ácido Clorhídrico al 5%', eq:['Et'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión y reposición de Agua oxigenada al 50%', eq:['Et'], ti:[],                                                                  fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de STS al 3%',               eq:['Rr'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de Óxido de Cobre',           eq:['Cu'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de Kolt UX -1',               eq:['Cu'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de Kolt UX - 2 (MU)',         eq:['Cu'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión y recambio de Techno wiper',    eq:['Coat'], ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión de aplicación de IPA en techno wiper', eq:['Coat'], ti:[],                                                                 fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de líquido foto resistente',  eq:['Coat'], ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de alcohol isopropílico (IPA)', eq:['Coat'], ti:[],                                                                      fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión chaveta de pinola',             eq:['LS'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Reposición de solución de revelado',     eq:['Dev'],  ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión y reposición de Chrio RX-R',   eq:['Cr'],   ti:[],                                                                        fr:['Diario','Semanal','Mensual','Trimestral','Anual']},
-  {a:'Control de concentraciones en la solución', eq:['Ni','Cu','Dev','Et','Cr'], ti:[],                                                  fr:['Semanal','Mensual','Trimestral','Anual']},
-  {a:'Control de pH en la solución',           eq:['Ni','Dev'], ti:[],                                                                    fr:['Semanal','Mensual','Trimestral','Anual']},
-  {a:'Limpieza de lente del laser',            eq:['LS'],   ti:[],                                                                        fr:['Semanal','Mensual','Trimestral','Anual']},
-  {a:'Revisión de metal de energización',      eq:['ElDg'], ti:['Inspección'],                                                            fr:['Semanal','Mensual','Trimestral','Anual']},
-  {a:'Recambio de filtros del baño',           eq:['ElDg','Ni','US','Coat','Dev','Et'], ti:['Ajuste'],                                    fr:['Mensual','Trimestral','Anual']},
-  {a:'Recambio de filtro de spray Ballard',    eq:['ElDg','Coat'], ti:['Ajuste'],                                                         fr:['Mensual','Trimestral','Anual']},
-  {a:'Recambio de solución del baño',          eq:['ElDg','US','Rr'], ti:['Ajuste'],                                                      fr:['Mensual','Trimestral','Anual']},
-  {a:'Limpieza o reemplazo de cátodo/ánodo',  eq:['ElDg','Ni'], ti:['Inspección','Ajuste'],                                              fr:['Mensual','Trimestral','Anual']},
-  {a:'Revisión y engrase de contrapunto de pinola', eq:['LS'], ti:[],                                                                     fr:['Mensual','Trimestral','Anual']},
-  {a:'Revisión y limpieza de unidad de aspirado', eq:['LS'], ti:[],                                                                       fr:['Mensual','Trimestral','Anual']},
-  {a:'Revisión de unidad de enfriamiento',     eq:['LS'],   ti:[],                                                                        fr:['Mensual','Trimestral','Anual']},
-  {a:'Revisión de sistema de aire comprimido', eq:['LS'],   ti:[],                                                                        fr:['Mensual','Trimestral','Anual']},
-  {a:'Limpieza de boquillas y tuberías internas', eq:['Dev'], ti:[],                                                                      fr:['Mensual','Trimestral','Anual']},
-  {a:'Recambio de sello de labio',             eq:['ElDg','Rr'], ti:['Inspección','Ajuste'],                                             fr:['Mensual','Trimestral','Anual']},
-  {a:'Recambio de sellos de teflón',           eq:['ElDg','Ni','Cu','Et','Rr','Cr'], ti:[],                                              fr:['Trimestral','Anual']},
-  {a:'Limpieza y mantenimiento de manga resistente al agua', eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],                      fr:['Trimestral','Anual']},
-  {a:'Pulido profundo de pinolas y eje',       eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],                                   fr:['Trimestral','Anual']},
-  {a:'Recambio de oring en manga resistente al agua si está dañado', eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],             fr:['Trimestral','Anual']},
-  {a:'Recambio de sello exterior en manga resistente al agua', eq:['ElDg','Ni','Cu','US','Dev','Et','Rr','Cr'], ti:[],                   fr:['Trimestral','Anual']},
-  {a:'Relleno de depósito de aceite',          eq:['ElDg','Cu','Rr','Cr'], ti:[],                                                        fr:['Trimestral','Anual']},
-  {a:'Revisión y limpieza de o-ring en pistón impermeable', eq:['ElDg'], ti:['Limpieza','Ajuste'],                                       fr:['Anual']},
-  {a:'Lubricación de partes móviles',          eq:['ElDg'], ti:['Limpieza','Inspección','Lubricación'],                                  fr:['Anual']},
-  {a:'Movimiento vertical del tanque',         eq:['ElDg'], ti:['Limpieza','Lubricación'],                                               fr:['Anual']},
-  {a:'Revisión de carcasa de filtro',          eq:['ElDg'], ti:['Inspección'],                                                           fr:['Anual']},
+  {a:'Lavado de manchas en compuertas', eq:['ElDg', 'Ni', 'Cu', 'US', 'Coat', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Pulido y/o limpieza de pinolas', eq:['ElDg', 'Ni', 'Cu', 'US', 'Coat', 'LS', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Limpieza de ejes de pinolas', eq:['ElDg', 'Ni', 'Cu', 'US', 'Coat', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Lavado interno del baño', eq:['ElDg', 'Ni', 'Cu', 'US', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Limpieza de manga resistente al agua', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Inspección y limpieza de rociadores', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión y ajuste de manga resistente al agua', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión de sello resistente al agua', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión de válvulas de drenaje', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de ácido sulfúrico al 5%', eq:['ElDg', 'Rr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de solución Ballard', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de solución desengrasante', eq:['ElDg'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de Ácido Clorhídrico al 5%', eq:['Et'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión y reposición de Agua oxigenada al 50%', eq:['Et'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de STS al 3%', eq:['Rr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de Óxido de Cobre', eq:['Cu'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de Kolt UX -1', eq:['Cu'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de Kolt UX - 2 (MU)', eq:['Cu'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión y recambio de Techno wiper', eq:['Coat'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión de aplicación de IPA en techno wiper', eq:['Coat'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de líquido foto resistente', eq:['Coat'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de alcohol isopropílico (IPA)', eq:['Coat'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión chaveta de pinola', eq:['LS'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Reposición de solución de revelado', eq:['Dev'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión y reposición de Chrio RX-R', eq:['Cr'], fr:['Diario', 'Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Control de concentraciones en la solución', eq:['Ni', 'Cu', 'Dev', 'Et', 'Cr'], fr:['Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Control de pH en la solución', eq:['Ni', 'Dev'], fr:['Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Limpieza de lente del laser', eq:['LS'], fr:['Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión de metal de energización', eq:['ElDg'], fr:['Semanal', 'Mensual', 'Trimestral', 'Anual']},
+  {a:'Recambio de filtros del baño', eq:['ElDg', 'Ni', 'Cu', 'US', 'Coat', 'Dev', 'Et'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Recambio de filtro de spray Ballard', eq:['ElDg', 'Coat'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Recambio de solución del baño', eq:['ElDg', 'US', 'Rr'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Limpieza o reemplazo de cátodo/ánodo', eq:['ElDg', 'Ni'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión y engrase de contrapunto de pinola', eq:['LS'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión y limpieza de unidad de aspirado', eq:['LS'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión de unidad de enfriamiento', eq:['LS'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Revisión de sistema de aire comprimido', eq:['LS'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Limpieza de boquillas y tuberías internas', eq:['Dev'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Recambio de sello de labio', eq:['ElDg', 'Rr'], fr:['Mensual', 'Trimestral', 'Anual']},
+  {a:'Recambio de sellos de teflón', eq:['ElDg', 'Ni', 'Cu', 'Et', 'Rr', 'Cr'], fr:['Trimestral', 'Anual']},
+  {a:'Limpieza y mantenimiento de manga resistente al agua', eq:['ElDg', 'Ni', 'Cu', 'US', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Trimestral', 'Anual']},
+  {a:'Pulido profundo de pinolas y eje', eq:['ElDg', 'Ni', 'Cu', 'US', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Trimestral', 'Anual']},
+  {a:'Recambio de oring en manga resistente al agua si está dañado', eq:['ElDg', 'Ni', 'Cu', 'US', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Trimestral', 'Anual']},
+  {a:'Recambio de sello exterior en manga resistente al agua', eq:['ElDg', 'Ni', 'Cu', 'US', 'Dev', 'Et', 'Rr', 'Cr'], fr:['Trimestral', 'Anual']},
+  {a:'Relleno de depósito de aceite', eq:['ElDg', 'Cu', 'Rr', 'Cr'], fr:['Trimestral', 'Anual']},
+  {a:'Revisión y limpieza de o-ring en pistón impermeable', eq:['ElDg'], fr:['Anual']},
+  {a:'Lubricación de partes móviles', eq:['ElDg'], fr:['Anual']},
+  {a:'Movimiento vertical del tanque', eq:['ElDg'], fr:['Anual']},
+  {a:'Revisión de carcasa de filtro', eq:['ElDg'], fr:['Anual']},
 ];
 
-// ═══════════════════════════════════════════════════
-//  ESTADO
-// ═══════════════════════════════════════════════════
-let taskCounter = 0;   // unique id per task row
-let totalTasks  = 0;
+// ═══════════════ ESTADO ═══════════════
+let TC = 0, TT = 0;
 
-function getTasks(frecuencia) {
-  // Build: { equipo -> { actividad -> [tipos] } }
+function getTasks(freq) {
+  // Estructura: { equipo: [actividades] }
   const map = {};
-  EQUIPOS_ORDER.forEach(eq => { map[eq] = {}; });
-
-  DATA.forEach(row => {
-    if (!row.fr.includes(frecuencia)) return;
-    row.eq.forEach(eq => {
-      if (!map[eq]) return;
-      if (!map[eq][row.a]) map[eq][row.a] = [];
-      const tipos = row.ti.length ? row.ti : [''];
-      tipos.forEach(t => {
-        const label = t ? `[${t}] ${row.a}` : row.a;
-        if (!map[eq][row.a].includes(label)) map[eq][row.a].push(label);
-      });
+  EQ_ORDER.forEach(e => { map[e] = []; });
+  DATA.forEach(r => {
+    if (!r.fr.includes(freq)) return;
+    r.eq.forEach(e => {
+      if (!map[e]) return;
+      if (!map[e].includes(r.a)) map[e].push(r.a);
     });
   });
   return map;
 }
 
-// ═══════════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════════
-function buildChecklist(frecuencia) {
-  const tasks = getTasks(frecuencia);
-  const container = document.getElementById('equiposContainer');
-  container.innerHTML = '';
-  taskCounter = 0;
-  totalTasks  = 0;
+// ═══════════════ RENDER ═══════════════
+function buildChecklist(freq) {
+  const tasks = getTasks(freq);
+  const con = document.getElementById('eqContainer');
+  con.innerHTML = '';
+  TC = 0; TT = 0;
 
-  EQUIPOS_ORDER.forEach(eq => {
-    const actividades = tasks[eq];
-    const actKeys = Object.keys(actividades).filter(a => actividades[a].length > 0);
-    if (actKeys.length === 0) return;
+  const EQ_NAMES = {
+    'ElDg': 'Desengrase Electrolítico [ElDg]',
+    'Ni':   'Niquelado [Ni]',
+    'Cu':   'Cobrizado [Cu]',
+    'US':   'Pulido de Cobre [US]',
+    'Coat': 'Coating [Coat]',
+    'LS':   'Laser [LS]',
+    'Dev':  'Revelado [Dev]',
+    'Et':   'Etching [Et]',
+    'Rr':   'Resist Removal [Rr]',
+    'Cr':   'Cromado [Cr]',
+  };
 
-    const equipBlock = document.createElement('div');
-    equipBlock.className = 'equipo-block';
+  EQ_ORDER.forEach(eq => {
+    const acts = tasks[eq];
+    if (!acts.length) return;
 
-    // Header del equipo
-    const taskCount = actKeys.reduce((s,a) => s + actividades[a].length, 0);
-    equipBlock.innerHTML = `
-      <div class="equipo-header">
-        ${eq}
-        <span class="badge">${taskCount} tarea${taskCount !== 1 ? 's' : ''}</span>
+    const cnt = acts.length;
+    TT += cnt;
+
+    const blk = document.createElement('div');
+    blk.className = 'eq-block';
+    blk.id = `eqb_${eq}`;
+    blk.innerHTML = `
+      <div class="eq-hdr" onclick="toggleEq('${eq}')">
+        <span class="eq-name">${EQ_NAMES[eq] || eq}</span>
+        <span class="eq-badge">${cnt}</span>
+        <span class="eq-badge eq-done" id="done_${eq}">✓ completo</span>
+        <i class="eq-chev">▾</i>
       </div>
-      <div class="actividad-block" id="equipo-${eq}"></div>
-    `;
-    container.appendChild(equipBlock);
+      <div class="eq-body" id="body_${eq}"></div>`;
+    con.appendChild(blk);
 
-    const actContainer = equipBlock.querySelector(`#equipo-${eq}`);
+    const body = blk.querySelector(`#body_${eq}`);
 
-    actKeys.forEach(actNombre => {
-      const tareas = actividades[actNombre];
+    acts.forEach((actNom, idx) => {
+      const num = TC + 1;
+      const id  = `t${TC++}`;
+      const row = document.createElement('div');
+      row.className = 't-row' + (idx === 0 ? ' act-first' : '');
+      row.dataset.id     = id;
+      row.dataset.eq     = eq;
+      row.dataset.nombre = actNom;
 
-      // Label de actividad
-      const actLabel = document.createElement('div');
-      actLabel.className = 'actividad-label';
-      actLabel.textContent = actNombre;
-      actContainer.appendChild(actLabel);
-
-      tareas.forEach(tareaLabel => {
-        const id = `task_${taskCounter++}`;
-        totalTasks++;
-
-        const row = document.createElement('div');
-        row.className = 'tarea-row';
-        row.dataset.taskId = id;
-
-        // Nombre a mostrar (quitar el prefijo [Tipo] si existe, mostrarlo como subtítulo)
-        const match = tareaLabel.match(/^\[([^\]]+)\] (.+)$/);
-        let displayName;
-        if (match) {
-          displayName = `<span style="font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-right:6px">${match[1]}</span>${match[2]}`;
-        } else {
-          displayName = tareaLabel;
-        }
-
-        row.innerHTML = `
-          <div class="tarea-nombre">${displayName}</div>
-          <div class="radio-group">
-            <div class="radio-opt">
-              <input type="radio" name="${id}" id="${id}_ok" value="cumplido"
-                     onchange="onRadioChange('${id}')">
-              <label for="${id}_ok" class="opt-ok">✓ Cumplido</label>
-            </div>
-            <div class="radio-opt">
-              <input type="radio" name="${id}" id="${id}_no" value="no_cumplido"
-                     onchange="onRadioChange('${id}')">
-              <label for="${id}_no" class="opt-no">✗ No cumplido</label>
-            </div>
+      row.innerHTML = `
+        <div class="t-main">
+          <span class="t-num">${num}</span>
+          <span class="t-name">${actNom}</span>
+          <div class="t-btns">
+            <button class="t-btn" id="ok_${id}" onclick="pick('${id}','ok')" title="Cumplido">✓</button>
+            <button class="t-btn" id="no_${id}" onclick="pick('${id}','no')" title="No cumplido">✗</button>
           </div>
-          <div class="justificacion-wrap" id="just_${id}">
-            <textarea id="txt_${id}" maxlength="200"
-                      placeholder="Describe brevemente el motivo (máx. 2 líneas)…"
-                      rows="2"></textarea>
-          </div>
-        `;
-        actContainer.appendChild(row);
-      });
+        </div>
+        <div class="t-just" id="jw_${id}">
+          <textarea id="jt_${id}" maxlength="200"
+            placeholder="Describe brevemente el motivo…" rows="2"></textarea>
+        </div>`;
+      body.appendChild(row);
     });
   });
 
-  updateProgress();
+  TT = TC;
+  updateProg();
 }
 
-function onRadioChange(id) {
-  const radio = document.querySelector(`input[name="${id}"]:checked`);
-  const just  = document.getElementById(`just_${id}`);
-  const txt   = document.getElementById(`txt_${id}`);
-  if (radio && radio.value === 'no_cumplido') {
-    just.classList.add('visible');
-    txt.focus();
-  } else {
-    just.classList.remove('visible');
-    if (txt) txt.value = '';
+// ── Selección de botón ──
+const STATE = {}; // id → 'ok'|'no'|null
+
+function pick(id, val) {
+  const prev = STATE[id];
+  // Toggle: si ya estaba seleccionado, deseleccionar
+  const next = (prev === val) ? null : val;
+  STATE[id] = next;
+
+  const okBtn = document.getElementById(`ok_${id}`);
+  const noBtn = document.getElementById(`no_${id}`);
+  const row   = document.querySelector(`.t-row[data-id="${id}"]`);
+  const jw    = document.getElementById(`jw_${id}`);
+  const jt    = document.getElementById(`jt_${id}`);
+
+  okBtn.classList.remove('sel-ok');
+  noBtn.classList.remove('sel-no');
+  row.classList.remove('ok-row','no-row');
+  jw.classList.remove('vis');
+
+  if (next === 'ok') {
+    okBtn.classList.add('sel-ok');
+    row.classList.add('ok-row');
+    if (jt) jt.value = '';
+  } else if (next === 'no') {
+    noBtn.classList.add('sel-no');
+    row.classList.add('no-row');
+    jw.classList.add('vis');
+    document.getElementById(`jt_${id}`).focus();
   }
-  updateProgress();
+
+  updateProg();
+  checkEqDone(row.dataset.eq);
 }
 
-function updateProgress() {
-  let answered = 0;
-  for (let i = 0; i < taskCounter; i++) {
-    const id = `task_${i}`;
-    const checked = document.querySelector(`input[name="${id}"]:checked`);
-    if (checked) answered++;
-  }
-  const pct = totalTasks > 0 ? Math.round(answered / totalTasks * 100) : 0;
-  document.getElementById('progressText').textContent = `${answered} / ${totalTasks} tareas`;
-  document.getElementById('progressFill').style.width = pct + '%';
+function chkJust(id) { /* validación en tiempo real si se necesita */ }
+
+function checkEqDone(eq) {
+  const rows = document.querySelectorAll(`.t-row[data-eq="${eq}"]`);
+  const allDone = Array.from(rows).every(r => STATE[r.dataset.id]);
+  const badge = document.getElementById(`done_${eq}`);
+  if (badge) badge.style.display = allDone ? 'inline-block' : 'none';
 }
 
-// ═══════════════════════════════════════════════════
-//  SELECTS
-// ═══════════════════════════════════════════════════
-function onSelectionChange() {
-  const op   = document.getElementById('selOperador').value;
-  const freq = document.getElementById('selFrecuencia').value;
-  const area = document.getElementById('checklistArea');
-  const empty = document.getElementById('emptyState');
+function updateProg() {
+  const answered = Object.values(STATE).filter(v => v).length;
+  const pct = TT > 0 ? Math.round(answered / TT * 100) : 0;
+  document.getElementById('progTxt').textContent  = `${answered} / ${TT}`;
+  document.getElementById('progPct').textContent  = pct + '%';
+  document.getElementById('progFill').style.width = pct + '%';
+  const hp = document.getElementById('hdrProg');
+  hp.textContent = pct + '%';
+  hp.style.display = TT > 0 ? 'inline-block' : 'none';
+}
 
+function toggleEq(eq) {
+  document.getElementById(`eqb_${eq}`).classList.toggle('closed');
+}
+
+// ═══════════════ SELECTS ═══════════════
+function onChange() {
+  const op   = document.getElementById('selOp').value;
+  const freq = document.getElementById('selFreq').value;
   if (op && freq) {
-    area.style.display = 'block';
-    empty.style.display = 'none';
-    document.getElementById('headerSub').textContent =
-      `${op} · Inspección ${freq.toLowerCase()}`;
+    document.getElementById('clArea').style.display  = 'block';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('hdrSub').textContent = `${op} · ${freq.toLowerCase()}`;
+    Object.keys(STATE).forEach(k => delete STATE[k]);
     buildChecklist(freq);
   } else {
-    area.style.display = 'none';
-    empty.style.display = 'block';
-    document.getElementById('headerSub').textContent =
-      'Selecciona operador y frecuencia para comenzar';
+    document.getElementById('clArea').style.display  = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('hdrSub').textContent = 'Selecciona operador y frecuencia';
   }
 }
+document.getElementById('selOp').addEventListener('change', onChange);
+document.getElementById('selFreq').addEventListener('change', onChange);
 
-document.getElementById('selOperador').addEventListener('change', onSelectionChange);
-document.getElementById('selFrecuencia').addEventListener('change', onSelectionChange);
-
-// ═══════════════════════════════════════════════════
-//  FINALIZAR
-// ═══════════════════════════════════════════════════
+// ═══════════════ FINALIZAR ═══════════════
 function finalizar() {
+  const op   = document.getElementById('selOp').value;
+  const freq = document.getElementById('selFreq').value;
   const pendientes = [];
-  const op   = document.getElementById('selOperador').value;
-  const freq = document.getElementById('selFrecuencia').value;
-
-  // Recopilar respuestas y detectar pendientes
   const respuestas = [];
-  for (let i = 0; i < taskCounter; i++) {
-    const id      = `task_${i}`;
-    const checked = document.querySelector(`input[name="${id}"]:checked`);
-    const row     = document.querySelector(`.tarea-row[data-task-id="${id}"]`);
-    const nombre  = row ? row.querySelector('.tarea-nombre').textContent.trim() : id;
 
-    if (!checked) {
-      pendientes.push(nombre);
+  for (let i = 0; i < TC; i++) {
+    const id   = `t${i}`;
+    const val  = STATE[id];
+    const row  = document.querySelector(`.t-row[data-id="${id}"]`);
+    const nombre = row ? (row.dataset.nombre || row.querySelector('.t-name').textContent.trim()) : id;
+    const equipo = row ? (row.dataset.eq || '') : '';
+    const jt   = document.getElementById(`jt_${id}`);
+    const just = (jt ? jt.value.trim() : '');
+
+    if (!val) {
+      pendientes.push({ num: i + 1, txt: nombre });
+    } else if (val === 'no' && !just) {
+      pendientes.push({ num: i + 1, txt: `${nombre} (falta justificación)` });
     } else {
-      const val  = checked.value;
-      const txt  = document.getElementById(`txt_${id}`);
-      const just = val === 'no_cumplido' ? (txt ? txt.value.trim() : '') : '';
-      // Pendiente si es "no cumplido" pero sin justificación
-      if (val === 'no_cumplido' && !just) {
-        pendientes.push(`${nombre} (falta justificación)`);
-      } else {
-        respuestas.push({ id, nombre, estado: val, justificacion: just });
-      }
+      respuestas.push({ id, nombre, equipo, estado: val === 'ok' ? 'cumplido' : 'no_cumplido', justificacion: just });
     }
   }
 
-  if (pendientes.length > 0) {
-    // Mostrar modal con pendientes
-    const lista = document.getElementById('listaPendientes');
-    lista.innerHTML = pendientes.map(p => `<li>${p}</li>`).join('');
-    document.getElementById('modalPendientes').classList.add('open');
+  if (pendientes.length) {
+    document.getElementById('cntPend').textContent = pendientes.length;
+    document.getElementById('listPend').innerHTML = pendientes
+      .map(p => `<li><span class="pend-num">${p.num}</span>${p.txt}</li>`)
+      .join('');
+    document.getElementById('modalPend').classList.add('open');
   } else {
-    // Enviar a Google Sheets (App Script) si hay URL configurada, sino mostrar éxito
-    enviarDatos({ operador: op, frecuencia: freq, fecha: new Date().toISOString(), respuestas });
+    enviar({ operador: op, frecuencia: freq, fecha: new Date().toISOString(), respuestas });
   }
 }
 
-function cerrarModal() {
-  document.getElementById('modalPendientes').classList.remove('open');
+function closeModal() { document.getElementById('modalPend').classList.remove('open'); }
+document.getElementById('modalPend').addEventListener('click', e => { if (e.target.id === 'modalPend') closeModal(); });
+
+// ═══════════════ ENVÍO ═══════════════
+const WH      = 'https://script.google.com/macros/s/AKfycbxcOpyU09ZcHJf2Z8KPHECZK70cOIwJ76KEbAo3vJuUd-a4WyiNtUrjmkkg-Vm3_-lH/exec';
+const MAIL_TO = 'sanfossi@bo.cl';
+
+function enviar(datos) {
+  // 1. Enviar a Google Sheets
+  fetch(WH, { method:'POST', mode:'no-cors',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify(datos) })
+    .then(() => abrirCorreo(datos))
+    .catch(()  => abrirCorreo(datos));
 }
 
-// Cerrar modal al tocar el overlay
-document.getElementById('modalPendientes').addEventListener('click', function(e) {
-  if (e.target === this) cerrarModal();
-});
+function abrirCorreo(datos) {
+  const { operador, frecuencia, fecha, respuestas } = datos;
 
-// ═══════════════════════════════════════════════════
-//  ENVÍO
-// ═══════════════════════════════════════════════════
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbznvPgeD2C6yj6CW4jrnG8I-0kxKbTg8n5RBinuC0K3y9jJ6PETn0Wqgd2yeMJau3Ks/exec'; // ← Pega aquí la URL de tu Google Apps Script
+  // Fecha formateada
+  const dt  = new Date(fecha);
+  const fechaStr = dt.toLocaleDateString('es-CL', {
+    day:'2-digit', month:'2-digit', year:'numeric'
+  });
+  const horaStr = dt.toLocaleTimeString('es-CL', {
+    hour:'2-digit', minute:'2-digit'
+  });
 
-function enviarDatos(datos) {
-  if (WEBHOOK_URL) {
-    // Enviar a Google Apps Script → Google Sheets
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(datos)
-    })
-    .then(() => mostrarExito())
-    .catch(() => mostrarExito()); // no-cors siempre resuelve como opaque
+  // Calcular % no cumplido
+  const total      = respuestas.length;
+  const noCumplidos = respuestas.filter(r => r.estado === 'no_cumplido');
+  const pctNo      = total > 0 ? ((noCumplidos.length / total) * 100).toFixed(1) : '0.0';
+
+  // Nombres completos de equipos
+  const EQ_NAMES = {
+    'ElDg':'Desengrase Electrolítico [ElDg]', 'Ni':'Niquelado [Ni]',
+    'Cu':'Cobrizado [Cu]',   'US':'Pulido de Cobre [US]',
+    'Coat':'Coating [Coat]', 'LS':'Laser [LS]',
+    'Dev':'Revelado [Dev]',  'Et':'Etching [Et]',
+    'Rr':'Resist Removal [Rr]', 'Cr':'Cromado [Cr]',
+  };
+
+  // Construir lista de no cumplidos
+  let listaNo = '';
+  if (noCumplidos.length === 0) {
+    listaNo = '  (Sin actividades no completadas)';
   } else {
-    // Sin webhook configurado: mostrar éxito de todas formas
-    console.log('Datos del checklist:', JSON.stringify(datos, null, 2));
-    mostrarExito();
+    listaNo = noCumplidos.map((r, i) =>
+      `  ${i + 1}. [${EQ_NAMES[r.equipo] || r.equipo}]\n     ${r.nombre}\n     Justificación: ${r.justificacion || 'Sin justificación'}`
+    ).join('\n\n');
   }
+
+  // Asunto
+  const asunto = 'Checklist Mantenimiento Autónomo FX3';
+
+  // Cuerpo del mail
+  const cuerpo =
+`Estimado/a,
+
+Se ha completado el registro de Mantenimiento Autónomo con los siguientes datos:
+
+──────────────────────────────────────────
+ Fecha de realización : ${fechaStr}
+ Hora de realización  : ${horaStr}
+ Operador             : ${operador}
+ Frecuencia           : ${frecuencia}
+ % No Completado      : ${pctNo}%  (${noCumplidos.length} de ${total} actividades)
+──────────────────────────────────────────
+
+ACTIVIDADES NO COMPLETADAS:
+
+${listaNo}
+
+──────────────────────────────────────────
+Mantenimiento Autónomo — Planta Robotizada de Cilindros`;
+
+  // Abrir cliente de correo
+  const mailtoUrl = `mailto:${MAIL_TO}`
+    + `?subject=${encodeURIComponent(asunto)}`
+    + `&body=${encodeURIComponent(cuerpo)}`;
+
+  window.location.href = mailtoUrl;
+
+  // Mostrar pantalla de éxito tras un pequeño delay
+  setTimeout(mostrarExito, 400);
 }
 
 function mostrarExito() {
-  document.getElementById('mainContainer').style.display = 'none';
-  document.getElementById('successScreen').classList.add('open');
-  document.querySelector('.header h1').textContent = '✓ Registro completado';
-  document.getElementById('headerSub').textContent = 'Mantenimiento registrado exitosamente';
+  document.getElementById('mainWrap').style.display = 'none';
+  document.getElementById('successScr').classList.add('open');
+  document.querySelector('.hdr-title').textContent = '✓ Registro completado';
+  document.getElementById('hdrSub').textContent = 'Mantenimiento registrado exitosamente';
 }
 </script>
 </body>
